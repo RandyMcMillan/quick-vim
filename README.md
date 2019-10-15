@@ -18,14 +18,6 @@ When software does many things it sacrifices doing one thing very well. Instead 
 ## solution
 
 - three use cases: install, upgrade, and uninstall
-- bash and git are the only deps
-- no goofy gui tty business; this is a vimrc for a vim that lives in a shell
-- pathogen for managing deps
-- bundles are limited to the simple stuff and not relearning things your shell does better: like git
-- no weird bundles that require re-compilation of vim or outside scripting languages
-- bundle config is in a plain text file stored in the root of this directory
-
-<img src="https://github.com/brianleroux/quick-vim/raw/master/screen.jpg" />
 
 ## the bundles for me
 
