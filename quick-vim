@@ -20,7 +20,18 @@ EOF
 backup () {
     if [ -e ./backup ]
     then 
-        echo 'skipping backup'
+        if [ -e ~/.vimrc ]
+        then
+            mv ~/.vimrc ./backup/.vimrc
+        fi
+        if [ -e ~/.vim ]
+        then
+            mv ~/.vim ./backup/.vim
+        fi
+        if [ -e ~/.vim_runtime ]
+        then
+            rm -rf ~/.vim_runtime
+        fi
     else
         mkdir -p ./backup
         if [ -e ~/.vimrc ]
@@ -31,25 +42,45 @@ backup () {
         then
             mv ~/.vim ./backup/.vim
         fi
+        if [ -e ~/.vim_runtime ]
+        then
+            rm -rf ~/.vim_runtime
+        fi
     fi
 }
 
 # copy in pathogen and then clone in bundles
 install () {
-    backup
-    git submodule update --init
-    git submodule update --recursive
-    cp -a $PWD/vimrc ~/.vim_runtime
-    sh ~/.vim_runtime/install_awesome_vimrc.sh
+    if [ -e ~/.vim_runtime ]
+    then 
+	backup
+	git submodule update --recursive
+	cp -a ./vimrc ~/.vim_runtime
+	sh ~/.vim_runtime/install_awesome_vimrc.sh
+    else
+	git submodule update --recursive
+	cp -a ./vimrc ~/.vim_runtime
+	sh ~/.vim_runtime/install_awesome_vimrc.sh
+    fi
 }
-
+# kills everything, pulls latest from git, installs it
+upgrade () {
+    uninstall
+    git pull
+    git submodule update --recursive    
+    install
+}
 # if backup exists clobbers home vim and copies in backup
 uninstall () {
-    if [ -e ./backup ]
-    then
-        rm ~/.vimrc
-        rm -rf ~/.vim
-        if [ -e ./backup/.vimrc ]
+        if [ -e ~/.vimrc ]
+        then
+		rm ~/.vimrc
+	fi
+        if [ -e ~/.vim ]
+        then
+		rm -rf ~/.vim
+	fi
+	if [ -e ./backup/.vimrc ]
         then
             mv ./backup/.vimrc ~/.vimrc
         fi
@@ -57,16 +88,7 @@ uninstall () {
         then
             mv ./backup/.vim ~/.vim
         fi
-        rm -rf ./backup
-    fi
-}
-
-# kills everything, pulls latest from git, installs it
-upgrade () {
-    uninstall
-    git pull
-    git submodule update --recursive    
-    install
+	    rm -rf ./backup
 }
 
 # fucking cryptic bash, test for a valid arg and execute it if so; otherwise show the help
