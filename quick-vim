@@ -72,22 +72,27 @@ upgrade () {
 }
 # if backup exists clobbers home vim and copies in backup
 uninstall () {
-        if [ -e ~/.vimrc ]
+
+    if [ -e ~/.vim_runtime ]
+    then 
+		rm -rf ~/.vim_runtime
+    fi
+    if [ -e ~/.vimrc ]
         then
 		rm ~/.vimrc
-	fi
-        if [ -e ~/.vim ]
+    fi
+    if [ -e ~/.vim ]
         then
 		rm -rf ~/.vim
-	fi
+    fi
 	if [ -e ./backup/.vimrc ]
         then
             mv ./backup/.vimrc ~/.vimrc
-        fi
-        if [ -e ./backup/.vim ]
+    fi
+    if [ -e ./backup/.vim ]
         then
             mv ./backup/.vim ~/.vim
-        fi
+    fi
 	    rm -rf ./backup
 }
 
